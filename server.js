@@ -128,7 +128,7 @@ server.post("/login", (req, res) => {
 
                 res.cookie("admin", "true", {
                     httpOnly: true,
-                    secure: false,
+                    secure: true,
                     maxAge: 1000 * 60 * 60 * 24
                 });
 
@@ -530,4 +530,4 @@ server.post("/api/deleteBlog", checkAdmin, (req, res) => {
     });
 });
 
-server.listen(PORT, () => console.log(`Server läuft auf http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Server läuft auf ${PORT}`));
