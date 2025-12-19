@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/adminCSS">
+    <link rel="icon" href="/adminIcon">
+     <!-- Quill Stylesheet -->
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+</head>
+<body class="addContentBody">
+
+    <div class="digitalCursor"></div>
+    <div id="backToAdminHome">Back to ADMIN Home</div>
+    <div id="goodAlert"></div>
+    <div id="badAlert"></div>
+    <button id="questionButton">?</button>
+    <div id="questionContainer">
+        <p>Hello</p><br><p>This is the page where you add your blog content. Just imagine it's like a kind of "Microsoft Word." Well, maybe the Temu version. Buuut the most important functions are there.</p>
+        <br>
+        <p>I think the worst thing about this editor is that you only have a few sizes to choose from and that changing the font color is a real pain if you're not used to it</p>
+        <br>
+        <p>If you want to add a link make shure it starts with http:// or https://. Otherwise it won't work properly. I think the easiest way is to simply copy the URL of the desired website and then paste it.</p>
+        <p>For example, if you want to link to Google, you would paste "https://www.google.com".</p>
+    </div>
+
+    <header>
+        <h1>Admin Area</h1>
+
+        <p id="logoutButton">Logout</p>
+    </header>
+
+    <h1 id="titleHeading"></h1>
+
+    <div class="quillArea" style="text-align: left;">
+        <input type="color" id="customColorPicker" value="#c91313">
+
+        <div id="toolbar">
+
+            <select class="ql-size">
+                <option value=""></option>
+                <option value="small"></option>
+                <option selected></option>
+                <option value="large"></option>
+                <option value="huge"></option>
+            </select>
+
+            <div class="mostUsedTools">
+
+                <select class="ql-color" title="textcolor">
+                    <option value="green"></option>
+                    <option value="red"></option>
+                    <option value="blue"></option>
+                    <option value="yellow"></option>
+                    <option value="orange"></option>
+                    <option value="purple"></option>
+                    <option value="grey"></option>
+                    <option value="beige"></option>
+                    <option value="pink"></option>
+                    <option value="black"></option>
+                    <option value="white"></option>
+                </select>
+
+                <select class="ql-background" title="background">
+                    <option value="" title="transparent"></option>
+                    <option value="green"></option>
+                    <option value="red"></option>
+                    <option value="blue"></option>
+                    <option value="yellow"></option>
+                    <option value="orange"></option>
+                    <option value="purple"></option>
+                    <option value="grey"></option>
+                    <option value="beige"></option>
+                    <option value="pink"></option>
+                    <option value="black"></option>
+                    <option value="white"></option>
+                </select>
+
+                <button class="ql-bold" title="bold"></button>
+                <button class="ql-italic" title="italic"></button>
+                <button class="ql-underline" title="underline"></button>
+                <button class="ql-blockquote" title="quote"></button>
+                <button class="ql-strike" title="strike"></button>
+            </div>
+
+            <div class="listTools">
+                <button class="ql-list" value="ordered" title="ordered list"></button>
+
+                <button class="ql-bold" title="bold"></button>
+                <button class="ql-italic" title="italic"></button>
+                <button class="ql-underline" title="underline"></button>
+                <button class="ql-blockquote" title="quote"></button>
+                <button class="ql-strike" title="strike"></button>
+            </div>
+
+            <div class="listTools">
+                <button class="ql-list" value="ordered" title="ordered list"></button>
+                <button class="ql-list" value="bullet" title="unordered list"></button>
+                <button class="ql-list one" value="check" title="unordered list"></button>
+            </div>
+
+            <div class="mediaTools">
+                <button class="ql-link" title="add Link"></button>
+            </div>
+
+            <span class="ql-formats">
+  <button class="ql-align" value=""></button>          <!-- Links -->
+  <button class="ql-align" value="center"></button>    <!-- Zentriert -->
+  <button class="ql-align" value="right"></button>     <!-- Rechts -->
+  <button class="ql-align" value="justify"></button>   <!-- Blocksatz -->
+            </span>
+        </div>
+
+        <div id="editor"></div>
+
+        <div class="outputButtons" style="margin-top: 20px;">
+            <button id="giveCode">Give me the Code!</button>
+            <button id="givePreview">Give me a preview!</button>
+            <button id="addContent">Save and Add Content</button>
+        </div>
+
+        <div id="previewContainer" style="text-align: left !important;" class="ql-editor"></div>
+
+    </div>
+
+    <!-- Quill Library -->
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+    <script src="/addContent.js"></script>
+</body>
+</html>

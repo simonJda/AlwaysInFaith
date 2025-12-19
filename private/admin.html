@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/adminCSS">
+    <link rel="icon" href="/adminIcon">
+</head>
+<body>
+
+    <div class="digitalCursor"></div>
+    <div id="helpButton">?</div>
+    <div id="helpContainer">
+        <div class="helpContent">
+            <h1>HELLO FROM THE OTHER SIDEEEE!!!</h1><br>
+            <hr><br>
+            <p>This is <u>your</u> very own area. Only <b>YOU</b> have access to the admin area (besides me...). Therefore, you shouldn't give the password to anyone. Otherwise, someone else could simply add a blog. You can add blogs here or edit those already uploaded. If something isn't working or you encounter errors, you need to write to me quickly. Or if you simply have any questions. <br><br>Oh, and "Yesn't" means no. I thought that was kind of funny *laughing*. <br><br>This is actually my first website that I'm making for someone else. Therefore, errors might occur quickly. But none that can't be fixed.<br>Ciaooo</p>
+            <button id="closeHelpContainer">Close</button>
+        </div>
+    </div>
+    <div id="goodAlert"></div>
+    <div id="badAlert"></div>
+
+    <header>
+        <h1>Admin Area</h1>
+
+        <p id="logoutButton">Logout</p>
+    </header>
+
+    <!--Navigation-->
+
+    <div id="navigationContainer">
+        <button id="addThumbnailNav" class="goodButtonNav">Add Thumbnail</button>
+        <button id="addBlogcontentNav" class="goodButtonNav">Add or edit Blog content</button>
+        <hr>
+        <button id="editBlogInfoNav">Edit Blog Information</button>
+        <button id="deleteBlogNav">Delete Blog</button>
+    </div>
+
+    <!--Thumbnail section-->
+
+    <div id="ThumbnailContainer">
+        <h2>Here you can add a thumbnail</h2>
+
+        <div class="ThumbnailContainerChild child1">
+            <h3><u>Blog title:</u></h3>
+            <input type="text" id="thumbnailTitleInput" placeholder="Title...">
+        </div>
+
+        <div class="ThumbnailContainerChild">
+            <h3><u>Description:</u></h3>
+            <input type="text" id="thumbnailDescriptionInput" placeholder="Description...">
+        </div>
+
+        <div class="ThumbnailContainerChild">
+            <h3><u>Image:</u></h3>
+            <input type="file" accept="image/*" id="thumbnailImageInput" style="color: black;">
+        </div>
+
+        <h2 style="margin-top: 100px;">More information</h2>
+        <p>If you do not fill in any of these fields, "undefined" will appear in your blog at the end.</p>
+
+        <div class="ThumbnailContainerChild child1">
+            <h3><u>Blog author:</u></h3>
+            <input type="text" id="thumbnailAuthorInput" placeholder="Author...">
+        </div>
+
+        <div class="ThumbnailContainerChild child1">
+            <h3><u>Blog date:</u></h3>
+            <input type="text" id="thumbnailDateInput" placeholder="Date...">
+        </div>
+
+        <button id="thumbnailPreview">Preview</button>
+        <button id="saveThumbnail">Save</button>
+
+        <div id="previewArea">
+            Hallo
+        </div>
+    </div>
+
+    <!--Blog content section-->
+
+    <div id="blogContainer">
+        <h2>Here you can add the blog content</h2>
+        <br>
+        <p><b>Before</b> you can add blog content, you need a thumbnail with this title.</p>
+
+        <div class="ThumbnailContainerChild">
+            <p>Here you have to enter the same title as the thumbnail.</p>
+            <input type="text" placeholder="Title:" id="blogTitleInput">
+            <button id="searchTitle">Search for thumbnail</button>
+        </div>
+    </div>
+
+    <!--Edit Content Section-->
+
+    <div id="editContainer">
+        <h2>Here you can edit blog information</h2>
+        <br>
+        <p>Before you edit blog information, make sure there is a blog with the title you are entering below</p>
+
+        <div class="ThumbnailContainerChild">
+            <p>Here you have to enter the same title as the thumbnail.</p>
+            <input type="text" placeholder="Title:" id="blogTitleEditInput">
+            <button id="searchTitleEdit">Search for thumbnail</button>
+        </div>
+    </div>
+
+    <!--Delete Blog Section-->
+
+    <div id="deleteContainer">
+        <h2>Here you can delete a blog</h2>
+        <br>
+        <p>Before you delete a blog, make sure there is a blog with the title you are entering below.</p>
+
+        <div class="ThumbnailContainerChild">
+            <div class="delteChild">
+                <p>Here you have to enter the same title as the thumbnail.</p>
+                <input type="text" placeholder="Title:" id="blogTitleDeleteInput">
+                <button id="deleteBlogButton">Delete Blog</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="goBack">Go back</button>
+    <br>
+
+    <script src="/adminJS"></script>
+</body>
+</html>

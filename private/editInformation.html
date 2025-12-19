@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/adminCSS">
+    <link rel="icon" href="/adminIcon">
+</head>
+<body class="addContentBody">
+
+    <div class="digitalCursor"></div>
+    <div id="backToAdminHome">Back to ADMIN Home</div>
+    <div id="goodAlert"></div>
+    <div id="badAlert"></div>
+    <button id="questionButton">?</button>
+    <div id="questionContainer">
+        <p>Hello</p><br><p>This is the page where you edit your blog information.</p>
+    </div>
+
+    <header>
+        <h1>Admin Area</h1>
+
+        <p id="logoutButton">Logout</p>
+    </header>
+
+    <h1 id="titleHeading"></h1>
+
+    <div class="editInformationMainContainer">
+        <div class="editInformationChild">
+            <h3><u>Blog Heading:</u></h3>
+            <input type="text" id="blogHeadingInput" placeholder="Blog Heading...">
+        </div>
+
+        <div class="editInformationChild">
+            <h3><u>Blog Date:</u></h3>
+            <input type="text" id="blogDateInput" placeholder="Blog Date...">
+        </div>
+
+        <div class="editInformationChild">
+            <h3><u>Blog Author:</u></h3>
+            <input type="text" id="blogAuthorInput" placeholder="Blog Author...">
+        </div>
+
+        <div class="editInformationChild">
+            <h3><u>Blog Description:</u></h3>
+            <input type="text" id="blogDescriptionInput" placeholder="Blog Description...">
+        </div>
+
+        <button id="saveInformation">Save Information</button>
+    </div>
+
+    <script src="/editInformation.js"></script>
+</body>
+</html>
