@@ -1,0 +1,7 @@
+Dateien auf Github updaten:
+
+1:Erstmal überprüfen mit "git status".
+2:"git add ." für alles oder "git add bespielOrdner/beispielDatei".
+3:Wieder "git status" zur Kontrolle.
+4:git commit -m "Nachricht".
+5:"git push" um die bearbeiteten Dateien an git zu schicken.
