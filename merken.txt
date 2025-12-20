@@ -5,3 +5,10 @@ Dateien auf Github updaten:
 3:Wieder "git status" zur Kontrolle.
 4:git commit -m "Nachricht".
 5:"git push" um die bearbeiteten Dateien an git zu schicken.
+
+git Versionen Bsp.:
+
+v0.1.0 Erste Funktionsfähige Version
+v1.0.0 Offizielle Fertige Version
+v1.0.1 Kleine fixes
+v1.1.0 Neue Funktion
