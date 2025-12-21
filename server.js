@@ -9,6 +9,8 @@ const fs = require("fs");
 const multer = require("multer");
 const { json } = require("stream/consumers");
 require("dotenv").config();
+const pool = require("./db");
+
 
 const server = express();
 const PORT = process.env.PORT || 3000;
@@ -529,5 +531,15 @@ server.post("/api/deleteBlog", checkAdmin, (req, res) => {
         });
     });
 });
+
+server.get("/api/db-test", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW()");
+    res.json({ success: true, time: result.rows[0] });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 
 server.listen(PORT, () => console.log(`Server läuft auf ${PORT}`));
