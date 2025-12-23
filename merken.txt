@@ -6,6 +6,17 @@ Dateien auf Github updaten:
 4:git commit -m "Nachricht".
 5:"git push" um die bearbeiteten Dateien an git zu schicken.
 
+"git log --oneline" = Commit Verlauf anzeigen
+
+"git reset --hard (Hash des commits)" = Commit lokal laden
+
+"git reset --hard orgin/main" = Neusten commit laden
+
+"git commit --amend --no-edit" = Neusten commit erweitern, ohne den Namen zu ändern
+
+"git push --force-with-lease" = Wenn man absichtlich die Datei auf github überschreiben möchte.
+(für "git commit --amend --no-edit" nötig).
+
 git Versionen Bsp.:
 
 v0.1.0 Erste Funktionsfähige Version

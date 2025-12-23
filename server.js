@@ -9,7 +9,6 @@ const fs = require("fs");
 const multer = require("multer");
 const { json } = require("stream/consumers");
 require("dotenv").config();
-const pool = require("./db");
 
 
 const server = express();
