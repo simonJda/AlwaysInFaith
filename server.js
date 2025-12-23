@@ -1,6 +1,6 @@
 //Public
 //server.js
-
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
@@ -8,7 +8,6 @@ const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const { json } = require("stream/consumers");
-require("dotenv").config();
 const pool = require("./db");
 
 const server = express();
@@ -228,66 +227,63 @@ server.get("/editInformation.js", checkAdmin, (req, res) => {
 
 //Thumbnail upload area
 
-server.post("/newThumbnail", checkAdmin, upload.single("thumbnailImage"), (req, res) => {
-    const { thumbnailTitle, thumbnailDescription, thumbnailDate, thumbnailAuthor }  = req.body;
+server.post("/api/newThumbnail", checkAdmin, upload.single("thumbnailImage"), async (req, res) => {
+    const { thumbnailTitle, thumbnailDescription, thumbnailDate, thumbnailAuthor } = req.body;
 
-    if(!thumbnailTitle || !thumbnailDescription) {
-        return res.json({ success: false, message: "Please fill all fields!" });
+    if (!thumbnailTitle || !thumbnailDescription) {
+      return res.json({
+        success: false,
+        message: "Please fill in all required fields."
+      });
     }
 
     let imagePath = null;
 
-    if(req.file) {
-        imagePath = "/uploads/" + req.file.filename;
+    if (req.file) {
+      imagePath = "/uploads/" + req.file.filename;
     }
 
-    const filePath = path.join(__dirname, "jsonFiles", "blogs.json");
+    const blogKey = thumbnailTitle.replace(/[\/\\.#$[\]]+/g, "_");
 
-    fs.readFile(filePath, "utf-8", (err, data) => {
-        if(err) {
-            return res.json({ success: false, message: "Error reading data file" });
+    try {
+        const check = await pool.query(
+            "SELECT id FROM posts WHERE heading = $1",
+            [blogKey]
+        );
+
+        if (check.rows.length > 0) {
+            return res.json({ success: false, message: "There is already a blog with this title!" });
         }
 
-        let fileData = {};
-        if(data.trim() !== "") {
-            try {
-                fileData = JSON.parse(data);
-            }
-            catch(err) {
-                return res.json({ success: false, message: "Error parsing data file" });
-            }
-        } 
+        await pool.query(
+            `
+            INSERT INTO posts
+            (heading, thumbnail_title, thumbnail_description, thumbnail_image, date, author)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            `,
+            [
+            blogKey,
+            thumbnailTitle,
+            thumbnailDescription,
+            imagePath,
+            thumbnailDate,
+            thumbnailAuthor
+            ]
+        );
 
-        const blogKey = thumbnailTitle.replace(/[\/\\.#$[\]]+/g, "_");
-
-        if(fileData[blogKey]) {
-            return res.json({ success: false, message: "There is already a blog with this title. Please choose a different title or edit the existing blog." });
-        }
-
-        if(!fileData[blogKey]) {
-            fileData[blogKey] = {};
-        }
-
-        fileData[blogKey].thumbnail = {
-            title: thumbnailTitle,
-            description: thumbnailDescription,
-            image: imagePath
-        };
-
-        fileData[blogKey].heading = blogKey;
-
-        fileData[blogKey].date = thumbnailDate;
-
-        fileData[blogKey].author = thumbnailAuthor;
-
-        fs.writeFile(filePath, JSON.stringify(fileData, null, 2), (err) => {
-            if(err) {
-                return res.json({ success: false, message: "Error writing to data file" });
-            }
-            
-            res.json({ success: true, message: "Thumbnail saved successfully! YAY!" });
+        res.json({
+            success: true,
+            message: "Thumbnail erfolgreich gespeichert!"
         });
-    });
+    } 
+    
+    catch (error) {
+        console.error("DB Fehler beim Einfügen:", error);
+        res.status(500).json({
+        success: false,
+        message: "Datenbankfehler"
+        });
+    }
 });
 
 //Blogs content Area
@@ -533,8 +529,8 @@ server.post("/api/deleteBlog", checkAdmin, (req, res) => {
 
 (async () => {
   try {
-    const result = await pool.query("SELECT NOW()");
-    console.log("DB verbunden:", result.rows[0]);
+    const result = await pool.query("SELECT * FROM posts");
+    console.log("DB verbunden:", result.rows);
   } catch (error) {
     console.error("DB Fehler:", error);
   }

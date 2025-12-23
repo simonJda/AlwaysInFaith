@@ -101,7 +101,7 @@ saveThumbnailButton.addEventListener("click", () => {
             formData.append("thumbnailImage", thumbnailImage.files[0]);
         }
 
-        fetch("/newThumbnail", {
+        fetch("/api/newThumbnail", {
             method: "POST",
             body: formData
         })
