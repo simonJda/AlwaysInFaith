@@ -165,7 +165,7 @@ searchTitleButton.addEventListener("click", () => {
         return;
     }
     
-    fetch("/searchTitle", {
+    fetch("/api/searchTitle", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

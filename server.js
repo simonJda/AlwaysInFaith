@@ -288,33 +288,27 @@ server.post("/api/newThumbnail", checkAdmin, upload.single("thumbnailImage"), as
 
 //Blogs content Area
 
-server.post("/searchTitle", checkAdmin, (req, res) => {
+server.post("/api/searchTitle", checkAdmin, async (req, res) => {
     const { titleInput } = req.body;
-    const filePath = path.join(__dirname, "jsonFiles", "blogs.json");
 
-    fs.readFile(filePath, "utf-8", (err, data) => {
-        if(err) {
-            return res.json({ success: false, message: "Error reading the blogs file!" });
+    const blogKey = titleInput.replace(/[\/\\.#$[\]]+/g, "_");
+    
+    try {
+        const check = await pool.query(
+            "SELECT heading FROM posts WHERE heading = $1",
+            [blogKey]
+        );
+
+        if(check.rows.length > 0) {
+            return res.json({ success: true, message: "Title found!", blogKey });
         }
 
-        let fileData = {};
-        if(data.trim() !== "") {
-            try{
-                fileData = JSON.parse(data);
-            }
-            catch(err) {
-                return res.json({ success: false, message: "Error parsing blogs file!" });
-            }
-        };
-
-        const blogKey = titleInput.replace(/[\/\\.#$[\]]+/g, "_");
-
-        if(fileData[blogKey]) {
-           return res.json({ success: true, message: "Title found", blogKey });
-        }
-
-        res.json({ success: false, message: "Title not found!" });     
-    });
+        res.json({ success: false, message: "Title not found!", blogKey });
+    }
+    catch (error) {
+        console.error("DB Error: ", error);
+        res.status(500).json({ success: false, message: "Database error" });
+    }
 });
 
 //Blogs area
@@ -535,7 +529,6 @@ server.post("/api/deleteBlog", checkAdmin, (req, res) => {
     console.error("DB Fehler:", error);
   }
 })();
-
 
 
 server.listen(PORT, () => console.log(`Server läuft auf ${PORT}`));
