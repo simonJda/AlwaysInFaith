@@ -3,13 +3,13 @@
 
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
-const fs = require("fs");
 const multer = require("multer");
 const { json } = require("stream/consumers");
 require("dotenv").config();
-
+const pool = require("./db");
 
 const server = express();
 const PORT = process.env.PORT || 3000;
@@ -531,14 +531,15 @@ server.post("/api/deleteBlog", checkAdmin, (req, res) => {
     });
 });
 
-server.get("/api/db-test", async (req, res) => {
+(async () => {
   try {
     const result = await pool.query("SELECT NOW()");
-    res.json({ success: true, time: result.rows[0] });
+    console.log("DB verbunden:", result.rows[0]);
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error("DB Fehler:", error);
   }
-});
+})();
+
 
 
 server.listen(PORT, () => console.log(`Server läuft auf ${PORT}`));

@@ -23,3 +23,16 @@ v0.1.0 Erste Funktionsfähige Version
 v1.0.0 Offizielle Fertige Version
 v1.0.1 Kleine fixes
 v1.1.0 Neue Funktion
+
+
+Projektordner
+|/jsonFiles
+|/node_modules
+|/private
+|/public
+|/uploads
+|.env
+|.package-lock.json
+|.package.json
+|.server.js
+|.db.js
