@@ -175,15 +175,18 @@ searchTitleButton.addEventListener("click", () => {
     .then(res => res.json())
     .then(data => {
         if(data.success) {
+            // Blog gefunden → weiterleiten
             window.location.href = `/api/addContent?blogKey=${encodeURIComponent(data.blogKey)}`;
+        } else {
+            // Blog nicht gefunden → Fehlermeldung anzeigen
+            badAlert.innerHTML = data.message;
+            showBadAlert();
+            setTimeout(() => {
+                removeBadAlert();
+            }, 3000);
         }
+    });
 
-        badAlert.innerHTML = data.message;
-        showBadAlert();
-        setTimeout(() => {
-            removeBadAlert();
-        }, 3000);
-    })
 });
 
 //Navigation
@@ -253,7 +256,7 @@ searchTitleEditButton.addEventListener("click", () => {
         return;
     }
 
-    fetch("/searchTitle", {
+    fetch("/api/searchTitle", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

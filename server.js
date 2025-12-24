@@ -530,8 +530,8 @@ server.post("/api/deleteBlog", checkAdmin, (req, res) => {
 
 (async () => {
   try {
-    const result = await pool.query("SELECT * FROM posts");
-    console.log("DB verbunden:", result.rows);
+    const result = await pool.query("SELECT NOW()");
+    console.log("DB verbunden:", result.rows[0]);
   } catch (error) {
     console.error("DB Fehler:", error);
   }
