@@ -341,31 +341,36 @@ server.get("/api/blogs", async (req, res) => {
     }
 });
 
-server.post("/api/getBlogText", (req, res) => {
+server.post("/api/getBlogText", async (req, res) => {
     const { blogKey } = req.body;
-    const filePath = path.join(__dirname, "jsonFiles", "blogs.json");
 
-    fs.readFile(filePath, "utf-8", (err, data) => {
-        if(err) {
-            return res.json({ success: false, message: "Error reading blogs file!" });
+    try {
+        const result = await pool.query(
+            "SELECT main_text FROM posts WHERE heading = $1",
+            [blogKey]
+        );
+
+        if (result.rows.length === 0) {
+            return res.json({
+                success: false,
+                message: "Blog not found"
+            });
         }
 
-        let fileData = {};
-
-        if(data.trim() !== "") {
-            try{
-                fileData = JSON.parse(data);
-            }
-            catch(err) {
-                return res.json({ success: false, message: "Error parsing blogs file!" });
-            }
-
-            if(fileData[blogKey] && fileData[blogKey].mainText) {
-                return res.json({ success: true, blogContent: fileData[blogKey].mainText });
-            }
-        }
-    });
+        return res.json({
+            success: true,
+            blogContent: result.rows[0].main_text
+        });
+    }
+    catch (error) {
+        console.error("DB Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Database error"
+        });
+    }
 });
+
 
 server.post("/api/addBlogContent", checkAdmin, (req, res) => {
     const { blogContent, blogKey } = req.body;
