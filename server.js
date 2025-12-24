@@ -313,26 +313,32 @@ server.post("/api/searchTitle", checkAdmin, async (req, res) => {
 
 //Blogs area
 
-server.get("/api/blogs", (req, res) => {
-    const filePath = path.join(__dirname, "jsonFiles", "blogs.json");
+server.get("/api/blogs", async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT heading, thumbnail_title, thumbnail_description, thumbnail_image, date, author, main_text
+            FROM posts
+        `);
+        const blogs = {};
 
-    fs.readFile(filePath, "utf8", (err, data) => {
-        if(err) {
-            return res.json({ success: false, message: "Error reading blogs file!" });
-        }
-
-        let fileData = {};
-
-        if(data.trim() !== "") {
-            try {
-                fileData = JSON.parse(data);
+        for (const row of result.rows) {
+            blogs[row.heading] = {
+                thumbnail: {
+                    title: row.thumbnail_title,
+                    description: row.thumbnail_description,
+                    image: row.thumbnail_image
+                },
+                date: row.date,
+                author: row.author,
+                mainText: row.main_text
             }
-            catch(err) {
-                return res.json({ success: false, message: "Error parsing blogs file!" });
-            }
         }
-        res.json({ success: true, blogs: fileData, message: "Blog found successfully" });
-    });
+        res.json({ success: true, blogs });
+    }
+    catch (error) {
+        console.error("DB Error: ", error);
+        return res.status(500).json({ success: false, message: "DB error" });
+    }
 });
 
 server.post("/api/getBlogText", (req, res) => {
