@@ -387,30 +387,42 @@ server.post("/api/addBlogContent", checkAdmin, async (req, res) => {
     }
 });
 
-server.post("/api/getBlogInformation", checkAdmin, (req, res) => {
+server.post("/api/getBlogInformation", checkAdmin, async (req, res) => {
     const { blogKey } = req.body;
-    const filePath = path.join(__dirname, "jsonFiles", "blogs.json");
+    const blogContent = {};
 
-    fs.readFile(filePath, "utf-8", (err, data) => {
-        if(err) {
-            return res.json({ success: false, message: "Error reading data file" });
+    try {
+        const result = await pool.query(
+            `
+            SELECT heading, thumbnail_title, thumbnail_description, thumbnail_image, date, author, main_text
+            FROM posts
+            WHERE heading = $1
+            `,
+            [blogKey]
+        )
+        if(result.rows.length === 0) {
+            return res.json({ success: false, message: "Blog not found" });
         }
 
-        fileData = {};
-
-        if(data.trim() !== "") {
-            try{
-                fileData = JSON.parse(data);
-            }
-            catch(err) {
-                return res.json({ success: false, message: "Error parsing data" });
-            }
+        blogContent[blogKey] = {
+            heading: result.rows[0].heading,
+            date: result.rows[0].date,
+            author: result.rows[0].author,
+            thumbnail: {
+                title: result.rows[0].thumbnail_title,
+                description: result.rows[0].thumbnail_description,
+                image: result.rows[0].thumbnail_image
+            },
+            mainText: result.rows[0].main_text
         }
-
-        const blogContent = fileData[blogKey];
 
         res.json({ success: true, blogContent });
-    });
+        console.log(blogContent);
+    }
+    catch (error) {
+        console.error("DB Error: ", error);
+        return res.status(500).json({ success: false, message: "Database error" });
+    }
 });
 
 server.post("/api/editetContent", checkAdmin, (req, res) => {
