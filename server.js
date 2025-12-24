@@ -372,35 +372,19 @@ server.post("/api/getBlogText", async (req, res) => {
 });
 
 
-server.post("/api/addBlogContent", checkAdmin, (req, res) => {
+server.post("/api/addBlogContent", checkAdmin, async (req, res) => {
     const { blogContent, blogKey } = req.body;
-    const filePath = path.join(__dirname, "jsonFiles", "blogs.json");
-
-    fs.readFile(filePath, "utf-8", (err, data) => {
-        if(err) {
-            return res.json({ success: false, message: "Error reading blogs file!" });
-        }
-
-        let fileData = {};
-
-        if(data.trim() !== "") {
-            try{
-                fileData = JSON.parse(data);
-            }
-            catch(err) {
-                return res.json({ success: false, message: "Error parsing blogs file!" });
-            }
-        }
-
-        fileData[blogKey].mainText = blogContent;
-        fs.writeFile(filePath, JSON.stringify(fileData, null, 2), (err) => {
-            if(err) {
-                return res.json({ success: false, message: "Error writing data file!" });
-            }
-
-            res.json({ success: true, message: "Text uploaded successfully" });
-        });
-    });
+    try {
+        await pool.query(
+            "UPDATE posts SET main_text = $1 WHERE heading = $2",
+            [blogContent, blogKey]
+        )
+        res.json({ success: true, message: "Blog content successfully saved!" });
+    }
+    catch (error) {
+        console.error("DB Error: ", error);
+        return res.status(500).json({ success: false, message: "Database error" });
+    }
 });
 
 server.post("/api/getBlogInformation", checkAdmin, (req, res) => {
