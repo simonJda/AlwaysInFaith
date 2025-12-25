@@ -245,6 +245,7 @@ server.post("/api/newThumbnail", checkAdmin, upload.single("thumbnailImage"), as
             }
 
             const imageUrl = result.secure_url;
+            const imagePublicId = result.public_id;
 
             const check = await pool.query("SELECT id FROM posts WHERE heading = $1", [blogKey]);
             if (check.rows.length > 0) {
@@ -253,9 +254,9 @@ server.post("/api/newThumbnail", checkAdmin, upload.single("thumbnailImage"), as
 
             await pool.query(
                 `INSERT INTO posts
-                 (heading, thumbnail_title, thumbnail_description, thumbnail_image, date, author)
-                 VALUES ($1, $2, $3, $4, $5, $6)`,
-                [blogKey, thumbnailTitle, thumbnailDescription, imageUrl, thumbnailDate, thumbnailAuthor]
+                 (heading, thumbnail_title, thumbnail_description, thumbnail_image, image_public_id, date, author)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+                [blogKey, thumbnailTitle, thumbnailDescription, imageUrl, imagePublicId, thumbnailDate, thumbnailAuthor]
             );
 
             res.json({ success: true, message: "Thumbnail erfolgreich gespeichert!" });
@@ -439,12 +440,29 @@ server.post("/api/deleteBlog", checkAdmin, async (req, res) => {
     const { blogTitleDeleteInput } = req.body;
 
     try {
+        const blogResult = await pool.query (
+            `
+            SELECT image_public_id FROM posts WHERE heading = $1
+            `, [blogTitleDeleteInput]
+        );
+
+        if (blogResult.rows.length === 0) {
+            return res.json({ success: false, message: "Blog not found" });
+        }
+
+        const publicId = blogResult.rows[0].image_public_id;
+
+        if (publicId) {
+            await cloudinary.uploader.destroy(publicId);
+        }
+
+
         const result = await pool.query (
             `
             DELETE FROM posts
             WHERE heading = $1
             `, [blogTitleDeleteInput]
-        )
+        );
 
         if (result.rowCount === 0) {
             return res.json({
