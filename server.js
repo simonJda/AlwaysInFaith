@@ -425,60 +425,31 @@ server.post("/api/getBlogInformation", checkAdmin, async (req, res) => {
     }
 });
 
-server.post("/api/editetContent", checkAdmin, (req, res) => {
+server.post("/api/editetContent", checkAdmin, async (req, res) => {
     const { blogInformation, blogKey } = req.body;
-    const filePath = path.join(__dirname, "jsonFiles", "blogs.json");
 
-    fs.readFile(filePath, "utf-8", (err, data) => {
-        if(err) {
-            return res.json({ success: false, message: "Error reading data file!" });
+    console.log("BlogInformation: ", blogInformation);
+    console.log("BlogKey: ", blogKey);
+
+    try {
+        const update = await pool.query (
+            `
+            UPDATE posts SET heading = $1, thumbnail_title = $1, thumbnail_description = $2, author = $3, date = $4
+            WHERE heading = $5
+            `,
+            [blogInformation.heading, blogInformation.thumbnail.description, blogInformation.author, blogInformation.date, blogKey]
+        )
+
+        if(update.rowCount === 0) {
+            return res.json({ success: false, message: "Blog not found" });
         }
 
-        fileData = {};
+    } catch (error) {
+        console.error("DB Error: ", error);
+        return res.status(500).json({ success: false, message: "Database Error" });
+    }
 
-        if(data.trim() !== "") {
-            try{
-                fileData = JSON.parse(data);
-            }
-            catch(err) {
-                return res.json({ success: false, message: "Error parsing data!" });
-            }
-        }
-
-        const newKey = blogInformation.heading.replace(/[\/\\.#$[\]]+/g, "_");
-
-        if (newKey !== blogKey && fileData[newKey]) {
-            return res.json({ success: false, message: "There is already a blog with this Title" });
-        }
-
-        const updatedInformation = {
-            heading: blogInformation.heading,
-            thumbnail: {
-                title: blogInformation.heading,
-                description: blogInformation.thumbnail.description,
-                image: fileData[blogKey].thumbnail.image
-            },
-            date: blogInformation.date,
-            author: blogInformation.author,
-            mainText: fileData[blogKey].mainText
-        };
-
-        if(newKey !== blogKey) {
-            delete fileData[blogKey];
-            fileData[newKey] = updatedInformation;
-        }
-        else {
-            fileData[blogKey] = updatedInformation;
-        }
-
-        fs.writeFile(filePath, JSON.stringify(fileData, null, 2), (err) => {
-            if(err) {
-                return res.json({ success: false, message: "Error writing data file" });
-            }
-
-            res.json({ success: true, message: "Successfully updated blog information" });
-        });
-    });
+    res.json({ success: true, message: "Updated information successfully" });
 });
 
 server.post("/api/deleteBlog", checkAdmin, (req, res) => {
