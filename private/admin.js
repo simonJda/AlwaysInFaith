@@ -48,7 +48,7 @@ let saveThumbnailButton = document.getElementById("saveThumbnail");
 
 saveThumbnailButton.addEventListener("click", () => {
 
-    goodAlert.innerHTML = "Are you sure? <br>";
+    goodAlert.innerHTML = "Are you sure? <br>This may need a few seconds to process. <br>";
     goodAlert.style.textAlign = "center";
 
     let yesButton = document.createElement("button");

@@ -16,6 +16,7 @@ window.addEventListener("DOMContentLoaded", () => {
     .then(data => {
         if(data.success) {
             const blogContent = data.blogs[blogKey];
+            console.log(blogContent);
 
             if(!blogContent || !blogContent.mainText) {
                 if (mainContainer) mainContainer.style.display = "none";
@@ -23,7 +24,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            if (heading) heading.innerHTML = blogContent.heading;
+            if (heading) heading.innerHTML = blogContent.thumbnail.title;
             if (date) date.innerHTML = blogContent.date;
             if (author) author.innerHTML = blogContent.author;
             if (mainText) mainText.innerHTML = blogContent.mainText;

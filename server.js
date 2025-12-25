@@ -9,6 +9,13 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const { json } = require("stream/consumers");
 const pool = require("./db");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const server = express();
 const PORT = process.env.PORT || 3000;
@@ -18,18 +25,8 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const originalName = file.originalname;
-    const timestamp = Date.now();
-    cb(null, `${timestamp}-${originalName}`);
-  }
-});
-
-const upload = multer({ storage });
+const storage = multer.memoryStorage();
+const upload = multer({ storage, fileFilter });
 
 server.use(express.json());
 server.use(express.static(path.join(__dirname, "public")));
@@ -231,58 +228,44 @@ server.post("/api/newThumbnail", checkAdmin, upload.single("thumbnailImage"), as
     const { thumbnailTitle, thumbnailDescription, thumbnailDate, thumbnailAuthor } = req.body;
 
     if (!thumbnailTitle || !thumbnailDescription) {
-      return res.json({
-        success: false,
-        message: "Please fill in all required fields."
-      });
+        return res.json({ success: false, message: "Please fill in all required fields." });
     }
 
-    let imagePath = null;
-
-    if (req.file) {
-      imagePath = "/uploads/" + req.file.filename;
+    if (!req.file) {
+        return res.json({ success: false, message: "No image uploaded." });
     }
 
     const blogKey = thumbnailTitle.replace(/[\/\\.#$[\]]+/g, "_");
 
     try {
-        const check = await pool.query(
-            "SELECT id FROM posts WHERE heading = $1",
-            [blogKey]
-        );
+        const result = await cloudinary.uploader.upload_stream({ folder: "blog_thumbnails" }, async (error, result) => {
+            if (error) {
+                console.error("Cloudinary Fehler:", error);
+                return res.status(500).json({ success: false, message: "Upload failed" });
+            }
 
-        if (check.rows.length > 0) {
-            return res.json({ success: false, message: "There is already a blog with this title!" });
-        }
+            const imageUrl = result.secure_url;
 
-        await pool.query(
-            `
-            INSERT INTO posts
-            (heading, thumbnail_title, thumbnail_description, thumbnail_image, date, author)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            `,
-            [
-            blogKey,
-            thumbnailTitle,
-            thumbnailDescription,
-            imagePath,
-            thumbnailDate,
-            thumbnailAuthor
-            ]
-        );
+            const check = await pool.query("SELECT id FROM posts WHERE heading = $1", [blogKey]);
+            if (check.rows.length > 0) {
+                return res.json({ success: false, message: "There is already a blog with this title!" });
+            }
 
-        res.json({
-            success: true,
-            message: "Thumbnail erfolgreich gespeichert!"
+            await pool.query(
+                `INSERT INTO posts
+                 (heading, thumbnail_title, thumbnail_description, thumbnail_image, date, author)
+                 VALUES ($1, $2, $3, $4, $5, $6)`,
+                [blogKey, thumbnailTitle, thumbnailDescription, imageUrl, thumbnailDate, thumbnailAuthor]
+            );
+
+            res.json({ success: true, message: "Thumbnail erfolgreich gespeichert!" });
         });
-    } 
-    
-    catch (error) {
-        console.error("DB Fehler beim Einfügen:", error);
-        res.status(500).json({
-        success: false,
-        message: "Datenbankfehler"
-        });
+
+        require('streamifier').createReadStream(req.file.buffer).pipe(result);
+
+    } catch (error) {
+        console.error("DB/Cloudinary Fehler:", error);
+        res.status(500).json({ success: false, message: "Upload failed" });
     }
 });
 
