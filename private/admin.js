@@ -329,8 +329,6 @@ deleteBlogButton.addEventListener("click", () => {
 
     yesButton.addEventListener("click", () => {
 
-        removeGoodAlert();
-
         fetch("/api/deleteBlog", {
             method: "POST",
             headers: {
@@ -349,6 +347,7 @@ deleteBlogButton.addEventListener("click", () => {
             }
 
             else {
+                removeGoodAlert();
                 badAlert.innerHTML = data.message;
                 showBadAlert();
                 setTimeout(() => {

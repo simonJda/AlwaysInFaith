@@ -452,51 +452,28 @@ server.post("/api/editetContent", checkAdmin, async (req, res) => {
     res.json({ success: true, message: "Updated information successfully" });
 });
 
-server.post("/api/deleteBlog", checkAdmin, (req, res) => {
+server.post("/api/deleteBlog", checkAdmin, async (req, res) => {
     const { blogTitleDeleteInput } = req.body;
-    const filePath = path.join(__dirname, "jsonFiles", "blogs.json");
 
-    fs.readFile(filePath, "utf-8", (err, data) => {
-        if(err) {
-            return res.json({ success: false, message: "Error reading file data!" });
-        }
+    try {
+        const result = await pool.query (
+            `
+            DELETE FROM posts
+            WHERE heading = $1
+            `, [blogTitleDeleteInput]
+        )
 
-        fileData = {};
-
-        if(data.trim() !== "") {
-            try {
-                fileData = JSON.parse(data);
-            }
-            catch(err) {
-                return res.json({ success: false, message: "Error parsing file data!" });
-            }
-        }
-
-        const blogKey = blogTitleDeleteInput.replace(/[\/\\.#$[\]]+/g, "_");
-
-        if(!fileData[blogKey]) {
-            return res.json({ success: false, message: "There is no blog with this title!" });
-        }
-
-        const imagePath = fileData[blogKey].thumbnail.image;
-        const finalImagePath = path.join(__dirname, imagePath);
-
-        fs.unlink(finalImagePath, (err) => {
-            if(err) {
-                console.log("Image was not found");
-            }
-
-            delete fileData[blogKey];
-
-            fs.writeFile(filePath, JSON.stringify(fileData, null, 2), (err) => {
-                if(err) {
-                    return res.json({ success: false, message: "Error writing file data!" });
-                }
-
-                res.json({ success: true, message: "Removed blog successfully" });
+        if (result.rowCount === 0) {
+            return res.json({
+                success: false,
+                message: "Blog not found"
             });
-        });
-    });
+        }
+
+        res.json({ success: true, message: "Blog removed successfully!" });
+    } catch(error) {
+        res.status(500).json({ success: false, message: "Database error" });
+    }
 });
 
 (async () => {
