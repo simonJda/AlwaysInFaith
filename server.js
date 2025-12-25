@@ -120,7 +120,7 @@ server.get("/api/attemptsControll", (req, res) => {
 
 server.post("/login", (req, res) => {
     const { emailInput, passwordInput } = req.body;
-    const rightEmail = "test@email.com";
+    const rightEmail = "annelynn01@outlook.com";
     const filePath = path.join(__dirname, "jsonFiles", "attempts.json");
     const userIP = req.ip;
 
@@ -268,6 +268,7 @@ server.post("/api/newThumbnail", checkAdmin, upload.single("thumbnailImage"), as
 
     try {
         const result = await uploadToCloudinary(req.file.buffer);
+        console.log("Cloudinary result:", result);
         const imageUrl = result.secure_url;
         const imagePublicId = result.public_id;
 
