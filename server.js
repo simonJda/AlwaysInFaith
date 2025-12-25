@@ -10,6 +10,10 @@ const multer = require("multer");
 const { json } = require("stream/consumers");
 const pool = require("./db");
 const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
+
+const server = express();
+const PORT = process.env.PORT || 3000;
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -17,12 +21,14 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const server = express();
-const PORT = process.env.PORT || 3000;
-
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+function uploadToCloudinary(buffer) {
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream({ folder: "blog_thumbnails" }, (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+        });
+        streamifier.createReadStream(buffer).pipe(stream);
+    });
 }
 
 const storage = multer.memoryStorage();
@@ -261,37 +267,29 @@ server.post("/api/newThumbnail", checkAdmin, upload.single("thumbnailImage"), as
     const blogKey = thumbnailTitle.replace(/[\/\\.#$[\]]+/g, "_");
 
     try {
-        const result = await cloudinary.uploader.upload_stream({ folder: "blog_thumbnails" }, async (error, result) => {
-            if (error) {
-                console.error("Cloudinary Fehler:", error);
-                return res.status(500).json({ success: false, message: "Upload failed" });
-            }
+        const result = await uploadToCloudinary(req.file.buffer);
+        const imageUrl = result.secure_url;
+        const imagePublicId = result.public_id;
 
-            const imageUrl = result.secure_url;
-            const imagePublicId = result.public_id;
+        const check = await pool.query("SELECT id FROM posts WHERE heading = $1", [blogKey]);
+        if (check.rows.length > 0) {
+            return res.json({ success: false, message: "There is already a blog with this title!" });
+        }
 
-            const check = await pool.query("SELECT id FROM posts WHERE heading = $1", [blogKey]);
-            if (check.rows.length > 0) {
-                return res.json({ success: false, message: "There is already a blog with this title!" });
-            }
+        await pool.query(
+            `INSERT INTO posts
+             (heading, thumbnail_title, thumbnail_description, thumbnail_image, image_public_id, date, author)
+             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [blogKey, thumbnailTitle, thumbnailDescription, imageUrl, imagePublicId, thumbnailDate, thumbnailAuthor]
+        );
 
-            await pool.query(
-                `INSERT INTO posts
-                 (heading, thumbnail_title, thumbnail_description, thumbnail_image, image_public_id, date, author)
-                 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                [blogKey, thumbnailTitle, thumbnailDescription, imageUrl, imagePublicId, thumbnailDate, thumbnailAuthor]
-            );
-
-            res.json({ success: true, message: "Thumbnail erfolgreich gespeichert!" });
-        });
-
-        require('streamifier').createReadStream(req.file.buffer).pipe(result);
-
+        res.json({ success: true, message: "Thumbnail erfolgreich gespeichert!" });
     } catch (error) {
-        console.error("DB/Cloudinary Fehler:", error);
+        console.error("Upload Fehler:", error);
         res.status(500).json({ success: false, message: "Upload failed" });
     }
 });
+
 
 //Blogs content Area
 
