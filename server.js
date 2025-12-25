@@ -56,106 +56,129 @@ server.get("/", (req, res) => {
 
 //Login area
 
-server.post("/login", (req, res) => {
-    const { emailInput, passwordInput } = req.body;
-    const rightEmail = "test@email.com";
+server.get("/api/attemptsControll", (req, res) => {
     const userIP = req.ip;
     const filePath = path.join(__dirname, "jsonFiles", "attempts.json");
 
     fs.readFile(filePath, "utf-8", (err, data) => {
-        if (err) {
-            return res.json({ success: false, message: "1.1 Error reading data file 2" });
+        if(err) {
+            return res.json({ success: false, message: "Error reading file" });
         }
 
-        let fileData = {};
-        if (data.trim() !== "") {
+        fileData = {};
+
+        if(data.trim() !== "") {
             try {
                 fileData = JSON.parse(data);
-            } catch (err) {
-                return res.json({ success: false, message: "1.1 Error parsing data file 2" });
             }
-        }
-
-        if (!fileData[userIP]) {
-            fileData[userIP] = { attempts: 0, lastAttempt: null };
+            catch(err) {
+                return res.json({ success: false, message: "Error parsing data" });
+            }
         }
 
         const currentTime = Date.now();
-        const twoHours = 2 * 60 * 60 * 1000;
 
-        if (fileData[userIP].lastAttempt !== null) {
-            const timeDifference = currentTime - fileData[userIP].lastAttempt;
-
-            if (timeDifference > twoHours) {
-                fileData[userIP].attempts = 0;
+        if(!fileData[userIP]) {
+            fileData[userIP] = {
+                attempts: 0,
+                lastAttempt: currentTime
             }
         }
 
-        fileData[userIP].attempts += 1;
-        fileData[userIP].lastAttempt = currentTime;
+        const userData = fileData[userIP];
+        const blockDuration = 30 * 60 * 1000; 
 
-        fs.writeFile(filePath, JSON.stringify(fileData, null, 2), (err) => {
+        if(userData.attempts >= 10) {
+            const timeSinceLastAttempt = currentTime - userData.lastAttempt;
+
+            if(timeSinceLastAttempt < blockDuration) {
+                return res.json({ success: false, message: "Too many failed attempts. Try again later.", blockButton: true });
+            }
+
+            else {
+                userData.attempts = 0;
+            }
+
+            fs.writeFile (filePath, JSON.stringify(fileData, null, 2), (err) => {
+                if(err) {
+                    return res.json({ success: false, message: "Error writing data" });
+                }
+                return res.json({ success: true, blockButton: false });
+            })
+        }
+        else {
+            return res.json({ success: true, blockButton: false });
+        }
+    });
+});
+
+server.post("/login", (req, res) => {
+    const { emailInput, passwordInput } = req.body;
+    const rightEmail = "test@email.com";
+    const filePath = path.join(__dirname, "jsonFiles", "attempts.json");
+    const userIP = req.ip;
+
+    fs.readFile(filePath, "utf-8", (err, data) => {
+        if(err) {
+            return res.json({ success: false, message: "Error reading file" });
+        }
+
+        fileData = {};
+
+        if(data.trim() !== "") {
+            try {
+                fileData = JSON.parse(data);
+            }
+            catch(err) {
+                return res.json({ success: false, message: "Error parsing data" });
+            }
+        }
+
+        if(!fileData[userIP]) {
+            fileData[userIP] = {
+                attempts: 0,
+                lastAttempt: Date.now()
+            }
+        }
+
+        const userData = fileData[userIP];
+
+        if (emailInput !== rightEmail) {
+            userData.attempts += 1;
+            userData.lastAttempt = Date.now();
+            fs.writeFile(filePath, JSON.stringify(fileData, null, 2), () => {});
+            return res.json({ success: false, message: "Wrong E-Mail!" });
+        }
+
+        const passwordHash = process.env.PASSWORD_HASH;
+
+        bcrypt.compare(passwordInput, passwordHash, (err, result) => {
             if (err) {
-                return res.json({ success: false, message: "1.1 Error saving data file 2" });
+                return res.json({
+                    success: false,
+                    message: "Error verifying password. Please contact the administrator."
+                });
             }
 
-            if (fileData[userIP].attempts > 5) {
-                return res.json({ success: false, message: "Too many tries! Please try again in 2 hours." });
+            if (!result) {
+                userData.attempts += 1;
+                userData.lastAttempt = Date.now();
+                fs.writeFile(filePath, JSON.stringify(fileData, null, 2), () => {});
+                return res.json({ success: false, message: "Wrong Password!" });
             }
 
+            userData.attempts = 0;
+            userData.lastAttempt = null;
 
+            fs.writeFile(filePath, JSON.stringify(fileData, null, 2), () => {});
 
-            if (emailInput !== rightEmail) {
-                return res.json({ success: false, message: "Wrong E-Mail!" });
-            }
-
-            const passwordHash = process.env.PASSWORD_HASH;
-
-            bcrypt.compare(passwordInput, passwordHash, (err, result) => {
-                if (err) {
-                    return res.json({
-                        success: false,
-                        message: "Error verifying password. Please contact the administrator."
-                    });
-                }
-
-                if (!result) {
-                    return res.json({ success: false, message: "Wrong Password!" });
-                }
-
-                res.cookie("admin", "true", {
-                    httpOnly: true,
-                    secure: true,
-                    maxAge: 1000 * 60 * 60 * 24
+            res.cookie("admin", "true", {
+                httpOnly: true,
+                secure: true,
+                maxAge: 1000 * 60 * 60 * 24
                 });
 
-                fs.readFile(filePath, "utf-8", (err, data) => {
-                    if(err) {
-                        return res.json({ success: false, message: "1.2 Error reading data file 2" });
-                    }
-
-                    let fileData = {}
-
-                    if(data.trim() !== "") {
-                        try {
-                            fileData = JSON.parse(data);
-                        }
-                        catch(err) {
-                            return res.json({ success: false, message: "1.2 Error parsing data file 2" });
-                        }
-                    }
-
-                    fileData[userIP].attempts = 0;
-
-                    fs.writeFile(filePath, JSON.stringify(fileData, null, 2), (err) => {
-                        if(err) {
-                            return res.json({ success: false, message: "1.2 Error saving data file 2" });
-                        }
-                    })
-
-                    return res.json({ success: true, message: "Login Successful" });
-                });
-            });
+            return res.json({ success: true, message: "Login Successful" });
         });
     });
 });
