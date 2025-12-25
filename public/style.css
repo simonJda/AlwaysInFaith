@@ -209,7 +209,7 @@ a {
 .endMenuHr {
     height: 3px;
     background-color: black;
-    width: 90%;
+    width: 75%;
     border: none;
     margin: 0 auto;
     margin-top: 15px;
@@ -263,8 +263,6 @@ a {
     background-color: rgba(0, 0, 0, 0.148);
     border-bottom: 1px solid rgb(255, 255, 255);
     border-left: 1px solid transparent;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     box-shadow: 0 5px 20px rgba(255, 255, 255, 0.535);
     padding: 10px 20px;
 }
