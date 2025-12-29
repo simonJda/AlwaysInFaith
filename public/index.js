@@ -20,7 +20,7 @@ let homeBlog2 = document.getElementById("homeBlog2");
 let homeBlog3 = document.getElementById("homeBlog3");
 
 homeBlog1.addEventListener("click", () => {
-    let blog = document.getElementById("homeBlog1Title").innerText;
+    let blog = "but behold, O Lord, You know it altogether";
     const encodedKey = encodeURIComponent(blog);
     window.location.href = `finalLayout.html?blog=${encodedKey}`;
 });
@@ -32,7 +32,7 @@ homeBlog2.addEventListener("click", () => {
 });
 
 homeBlog3.addEventListener("click", () => {
-    let blog = "but behold, O Lord, You know it altogether_";
+    let blog = document.getElementById("homeBlog3Title").innerText;
     const encodedKey = encodeURIComponent(blog);
     window.location.href = `finalLayout.html?blog=${encodedKey}`;
 });
