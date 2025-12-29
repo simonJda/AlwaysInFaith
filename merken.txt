@@ -8,9 +8,11 @@ Dateien auf Github updaten:
 
 "git log --oneline" = Commit Verlauf anzeigen
 
-"git reset --hard (Hash des commits)" = Commit lokal laden
+"git reset --hard (Hash des commits)" = Commit lokal laden (überschreibt ALLE Datien)
+-> Sicher: "git checkout -commit-" 
 
 "git reset --hard orgin/main" = Neusten commit laden
+->ggf. "git swith main" fals "HEAD detached from -commit-"
 
 "git commit --amend --no-edit" = Neusten commit erweitern, ohne den Namen zu ändern
 

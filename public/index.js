@@ -32,7 +32,7 @@ homeBlog2.addEventListener("click", () => {
 });
 
 homeBlog3.addEventListener("click", () => {
-    let blog = document.getElementById("homeBlog3Title").innerText;
+    let blog = "but behold, O Lord, You know it altogether_";
     const encodedKey = encodeURIComponent(blog);
     window.location.href = `finalLayout.html?blog=${encodedKey}`;
 });
