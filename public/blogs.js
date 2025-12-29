@@ -14,6 +14,13 @@ window.addEventListener("DOMContentLoaded", () => {
                 blogsContainerBlock.addEventListener("click", () => {
                     const encodedKey = encodeURIComponent(blogKey);
                     window.location.href = `finalLayout.html?blog=${encodedKey}`;
+                    fetch("/controll", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ message: encodedKey })
+                    })
                 });
 
                 const heading = document.createElement("h3");

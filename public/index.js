@@ -20,8 +20,16 @@ let homeBlog2 = document.getElementById("homeBlog2");
 let homeBlog3 = document.getElementById("homeBlog3");
 
 homeBlog1.addEventListener("click", () => {
-    let blog = "but behold, O Lord, You know it altogether";
+    let blog = "But behold, o Lord, You know it altogether";
     const encodedKey = encodeURIComponent(blog);
+    const message = encodedKey;
+    fetch("/controll", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message })
+    })
     window.location.href = `finalLayout.html?blog=${encodedKey}`;
 });
 

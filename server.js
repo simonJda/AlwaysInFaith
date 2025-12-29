@@ -495,6 +495,11 @@ server.post("/api/deleteBlog", checkAdmin, async (req, res) => {
     }
 });
 
+server.post("/controll", (req, res) => {
+    const { message } = req.body;
+    console.log(message);
+});
+
 (async () => {
   try {
     const result = await pool.query("SELECT NOW()");
