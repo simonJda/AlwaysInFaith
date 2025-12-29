@@ -69,23 +69,25 @@ document.addEventListener("mousemove", e => {
 
 let titleHeading = document.getElementById("titleHeading");
 let blogContent = {};
+let blogKey;
 
 window.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const paramKey = params.get("key") || params.get("blogKey");
     titleHeading.textContent = decodeURIComponent(paramKey);
+    blogKey = paramKey;
+
     fetch("/api/getBlogInformation", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ blogKey: decodeURIComponent(paramKey) })
+        body: JSON.stringify({ blogKey })
     })
     .then(res => res.json())
     .then(data => {
         if(data.success) {
-            blogInformation = data.blogContent;
-            console.log(blogContent);
+            blogContent = data.blogContent[blogKey];
         }
         else {
             badAlert.innerHTML = data.message;
@@ -94,43 +96,39 @@ window.addEventListener("DOMContentLoaded", () => {
                 removeBadAlert();
             }, 3000);
         }
-    })
+    });
 });
 
 let saveInformationButton = document.getElementById("saveInformation");
 
 saveInformationButton.addEventListener("click", () => {
-    const editetHeading = document.getElementById("blogHeadingInput").value;
-    const editetDate = document.getElementById("blogDateInput").value;
-    const editetAuthor = document.getElementById("blogAuthorInput").value;
-    const editetDescription = document.getElementById("blogDescriptionInput").value;
-
-    const params = new URLSearchParams(window.location.search);
-    const paramKey = params.get("key") || params.get("blogKey");
-
-    if(editetHeading.trim() !== "") {
-        blogInformation.heading = editetHeading;
-        blogInformation.thumbnail.title = editetHeading;
+    const editedHeading = document.getElementById("blogHeadingInput").value;
+    if(editedHeading.trim() !== "") {
+        blogContent.heading = editedHeading;
+        blogContent.thumbnail.title = editedHeading;
     }
 
-    if(editetDate.trim() !== "") {
-        blogInformation.date = editetDate;
+    const editedDate = document.getElementById("blogDateInput").value;
+    if(editedDate.trim() !== "") {
+        blogContent.date = editedDate;
     }
 
-    if(editetAuthor.trim() !== "") {
-        blogInformation.author = editetAuthor;
+    const editedAuthor = document.getElementById("blogAuthorInput").value;
+    if(editedAuthor.trim() !== "") {
+        blogContent.author = editedAuthor;
     }
 
-    if(editetDescription.trim() !== "") {
-        blogInformation.thumbnail.description = editetDescription;
+    const editedDescription = document.getElementById("blogDescriptionInput").value;
+    if(editedDescription.trim() !== "") {
+        blogContent.thumbnail.description = editedDescription;
     }
 
-    fetch("/api/editetContent", {
+    fetch("/api/editedContent", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ blogInformation, blogKey: decodeURIComponent(paramKey) })
+        body: JSON.stringify({ blogContent, blogKey })
     })
     .then(res => res.json())
     .then(data => {
@@ -141,11 +139,12 @@ saveInformationButton.addEventListener("click", () => {
                 removeGoodAlert();
             }, 3000);
         }
-        
-        badAlert.innerHTML = data.message;
-        showBadAlert();
-        setTimeout(() => {
-           removeBadAlert(); 
-        }, 3000);
+        else {
+            badAlert.innerHTML = data.message;
+            showBadAlert();
+            setTimeout(() => {
+                removeBadAlert();
+            }, 3000);
+        }
     });
 });

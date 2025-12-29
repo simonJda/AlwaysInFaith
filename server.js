@@ -423,7 +423,6 @@ server.post("/api/getBlogInformation", checkAdmin, async (req, res) => {
         }
 
         res.json({ success: true, blogContent });
-        console.log(blogContent);
     }
     catch (error) {
         console.error("DB Error: ", error);
@@ -431,11 +430,8 @@ server.post("/api/getBlogInformation", checkAdmin, async (req, res) => {
     }
 });
 
-server.post("/api/editetContent", checkAdmin, async (req, res) => {
-    const { blogInformation, blogKey } = req.body;
-
-    console.log("BlogInformation: ", blogInformation);
-    console.log("BlogKey: ", blogKey);
+server.post("/api/editedContent", checkAdmin, async (req, res) => {
+    const { blogContent, blogKey } = req.body;
 
     try {
         const update = await pool.query (
@@ -443,7 +439,7 @@ server.post("/api/editetContent", checkAdmin, async (req, res) => {
             UPDATE posts SET heading = $1, thumbnail_title = $1, thumbnail_description = $2, author = $3, date = $4
             WHERE heading = $5
             `,
-            [blogInformation.heading, blogInformation.thumbnail.description, blogInformation.author, blogInformation.date, blogKey]
+            [blogContent.heading, blogContent.thumbnail.description, blogContent.author, blogContent.date, blogKey]
         )
 
         if(update.rowCount === 0) {
