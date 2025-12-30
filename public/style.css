@@ -431,12 +431,15 @@ a {
     display: flex;
     align-items: center;
     text-align: center;
-    background-color: #ecebe5;
     padding: 20px;
     gap: 40px;
     margin: 0 auto;
     justify-content: space-around;
     width: 100%;
+    background-color: rgba(255, 255, 255, 0.457);
+    border: 1px solid rgba(255, 255, 255, 0.712);
+    box-shadow: 0 0 10px black;
+    border-radius: 20px;
 }
 
 .homeAboutMeContainer img {
@@ -512,6 +515,7 @@ a {
     text-align: center;
     padding: 30px;
     background-color: #929972;
+    margin-bottom: -10px;
 }
 
 .homeInstagramContainer {
@@ -519,10 +523,10 @@ a {
     margin: 40px auto;
     padding: 20px;
     max-width: 500px;
-    border: 1px solid rgba(255, 255, 255, 0.536);
-    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.735);
+    background-color: rgba(255, 255, 255, 0.443);
     box-shadow: 0 0 10px black;
-    background-color: rgba(255, 255, 255, 0.17);
+    border-radius: 20px;
 }
 
 /*About Me Section*/
@@ -809,11 +813,9 @@ a {
 }
 
 .contacts {
-    width: 390px;
-    max-width: 90%;
-    border-left: 1px solid black;
-    margin: 10px auto;
     text-align: left;
+    margin-left: 30%;
+    border-left: 1px solid black;
 }
 
 .contactChild2 {
@@ -867,7 +869,6 @@ a {
 
 .paypalImage {
     width: 100%;
-    border: 1px solid black;
     border-radius: 20px;
     margin-left: 0;
 }
