@@ -25,7 +25,7 @@ body {
 }
 
 header {
-    background-color: #8e8d6e;
+    background-color: #929972; /*8e8d6e*/
     padding: 10px;
     width: 100%;
     box-shadow: 0 0 15px black;
@@ -63,7 +63,7 @@ a {
 }
 
 .wideNavUl li:hover {
-    background-color: rgb(180, 182, 141);
+    background-color: #858d60;
 }
 
 .smallNavUl {
@@ -188,7 +188,7 @@ a {
     box-shadow: -5px 10px 10px rgba(0, 0, 0, 0.338);
     z-index: 101;
     transition: 0.5s all;
-    background-color: #8e8d6ee0;
+    background-color: #929972da;
     backdrop-filter: blur(5px);
 }
 
@@ -308,6 +308,8 @@ a {
     }
 }
 
+/*Home Area*/
+
 .mainContainerHeading {
     text-align: center;
     margin: 40px;
@@ -321,7 +323,7 @@ a {
     margin-top: 40px;
     text-align: center;
     align-items: center;
-    background-color: #929972;
+    background-color: #929972; /*#929972*/
     gap: 20px;
     padding: 40px;
 }
@@ -421,6 +423,8 @@ a {
     color: #4C3D19;
 }
 
+/*Home About me Area*/
+
 .homeMainContainerChild3 {
     text-align: center;
     padding: 40px;
@@ -435,11 +439,7 @@ a {
     gap: 40px;
     margin: 0 auto;
     justify-content: space-around;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.457);
-    border: 1px solid rgba(255, 255, 255, 0.712);
-    box-shadow: 0 0 10px black;
-    border-radius: 20px;
+    width: 90%;
 }
 
 .homeAboutMeContainer img {
@@ -523,27 +523,17 @@ a {
     margin: 40px auto;
     padding: 20px;
     max-width: 500px;
-    border: 1px solid rgba(255, 255, 255, 0.735);
-    background-color: rgba(255, 255, 255, 0.443);
-    box-shadow: 0 0 10px black;
-    border-radius: 20px;
 }
 
 /*About Me Section*/
 
 .AMmainChild1 {
-    background-color: rgb(216, 216, 182);
-    padding: 20px 10px;
-    width: 90%;
-    margin: 10px auto;
+    background-color: #929972;
+    padding: 30px 10px;
     text-align: center;
     transition: 0.5s width;
-}
-
-@media (min-width: 1100px) {
-    .AMmainChild1 {
-        width: 70%;
-    }
+    width: 100%;
+    margin-bottom: 30px;
 }
 
 .AMmainChild1 p {
@@ -814,8 +804,8 @@ a {
 
 .contacts {
     text-align: left;
-    margin-left: 30%;
-    border-left: 1px solid black;
+    width: 100%;
+    padding-left: 30%;
 }
 
 .contactChild2 {
@@ -838,6 +828,7 @@ a {
 .supportContainer {
     display: flex;
     justify-content: center;
+    padding: 20px;
 }
 
 .supportContainerChild1 {
@@ -853,10 +844,9 @@ a {
     border: 1px solid grey;
     border-radius: 20px;
     padding: 20px;
-    background: linear-gradient(-110deg, rgba(0, 0, 0, 0.293), #fff4ec);
     display: flex;
     flex-direction: column;
-    box-shadow: 3px -2px 10px rgba(128, 128, 128, 0.749);
+    box-shadow: 0 0 10px rgba(128, 128, 128, 0.749);
     height: fit-content;
     transition: 0.3s all;
 }
@@ -873,14 +863,29 @@ a {
     margin-left: 0;
 }
 
+.link1 {
+    min-width: 130px;
+}
+
 .child1 .link1 {
     width: 50%;
+}
+
+.bankTable td {
+    word-break: break-all;
 }
 
 .supportContainerChild2 .child1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+@media (max-width: 430px) {
+    .supportContainerChild2 .child1 {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 .supportContainerChild2 hr {
@@ -891,6 +896,16 @@ a {
     text-align: left;
     border-left: 1px solid black;
     padding-left: 10px;
+}
+
+@media (max-width: 700px) {
+    .bankTable td, .bankTable th {
+        display: block;
+    }
+
+    .bankTable tr {
+        padding-bottom: 15px;
+    }
 }
 
 @media (max-width: 830px) {
@@ -909,7 +924,15 @@ a {
 }
 
 @media (max-width: 500px) {
-    .supportContainerChild1, .supportContainerChild2 {
+    .supportContainerChild1 {
         width: 80%;
+    }
+
+    .supportContainerChild2 {
+        width: 100%;
+    }
+
+    .supportContainer {
+        padding: 0;
     }
 }
