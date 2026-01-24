@@ -56,7 +56,7 @@ logInButton.addEventListener("click", () => {
                     logInButton.style.backgroundColor = "red";
                 }
             }
-        })
+        });
     }
 });
 
