@@ -44,3 +44,17 @@ homeBlog3.addEventListener("click", () => {
     const encodedKey = encodeURIComponent(blog);
     window.location.href = `finalLayout.html?blog=${encodedKey}`;
 });
+
+const text = "Welcome";
+const el = document.getElementById("typewriter");
+let index = 0;
+
+function type() {
+  if (index < text.length) {
+    el.textContent += text[index];
+    index++;
+    setTimeout(type, 100);
+  }
+}
+
+type();
