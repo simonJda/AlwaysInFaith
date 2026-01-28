@@ -98,6 +98,7 @@ server.get("/api/attemptsControll", (req, res) => {
             const timeSinceLastAttempt = currentTime - userData.lastAttempt;
 
             if(timeSinceLastAttempt < blockDuration) {
+                console.warn("⛔ IP geblockt:", userIP);
                 return res.json({ success: false, message: "Too many failed attempts. Try again later.", blockButton: true });
             }
 
@@ -123,6 +124,8 @@ server.post("/login", (req, res) => {
     const rightEmail = "annelynn01@outlook.com";
     const filePath = path.join(__dirname, "jsonFiles", "attempts.json");
     const userIP = req.ip;
+    console.log("🔐 Login-Versuch von IP:", req.ip);
+
 
     fs.readFile(filePath, "utf-8", (err, data) => {
         if(err) {
@@ -153,6 +156,7 @@ server.post("/login", (req, res) => {
             userData.attempts += 1;
             userData.lastAttempt = Date.now();
             fs.writeFile(filePath, JSON.stringify(fileData, null, 2), () => {});
+            console.warn("❌ Falsche E-Mail von IP:", req.ip);
             return res.json({ success: false, message: "Wrong E-Mail!" });
         }
 
@@ -170,6 +174,7 @@ server.post("/login", (req, res) => {
                 userData.attempts += 1;
                 userData.lastAttempt = Date.now();
                 fs.writeFile(filePath, JSON.stringify(fileData, null, 2), () => {});
+                console.warn("❌ Falsches Passwort von IP:", req.ip);
                 return res.json({ success: false, message: "Wrong Password!" });
             }
 
@@ -183,6 +188,8 @@ server.post("/login", (req, res) => {
                 secure: true,
                 maxAge: 1000 * 60 * 60 * 24
                 });
+
+                console.log("✅ Login erfolgreich:", req.ip);
 
             return res.json({ success: true, message: "Login Successful" });
         });

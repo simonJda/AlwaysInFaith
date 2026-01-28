@@ -95,6 +95,18 @@ footer {
     bottom: 0;
 }
 
+@media (max-width: 500px) {
+    .footerBottom {
+        position: static !important;
+        margin-bottom: -10px;
+    }
+
+    footer {
+        flex-direction: column;
+        font-size: 70%;
+    }
+}
+
 .headerHeading {
     color: #364024;
     font-family: "Imperial Script", cursive;
