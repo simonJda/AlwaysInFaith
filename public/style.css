@@ -37,6 +37,24 @@ header {
     text-align: right;
 }
 
+footer {
+    background-color: #929972;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    position:static;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+}
+
+.footerBottom {
+    position: fixed !important;
+    bottom: 0;
+}
+
 .headerHeading {
     color: #364024;
     font-family: "Imperial Script", cursive;
@@ -610,7 +628,7 @@ a {
     text-align: center;
     transition: 0.5s width;
     width: 100%;
-    margin-bottom: 30px;
+    margin-bottom: -10px;
 }
 
 .AMmainChild1 p {
