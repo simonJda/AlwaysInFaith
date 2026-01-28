@@ -1,6 +1,6 @@
 {
   "::1": {
-    "attempts": 1,
-    "lastAttempt": 1769608835360
+    "attempts": 0,
+    "lastAttempt": null
   }
 }
