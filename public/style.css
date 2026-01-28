@@ -3,6 +3,46 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: "Imperial Script";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("assets/fonts/imperialScript/ImperialScript-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Alex Brush";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("assets/fonts/alexBrush/AlexBrush-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("assets/fonts/cormorantGaramond/CormorantGaramond-VariableFont_wght.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Lora";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("assets/fonts/lora/Lora-VariableFont_wght.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("assets/fonts/raleway/Raleway-VariableFont_wght.woff2") format("woff2");
+}
+
 body {
     min-height: 100vh;
     overflow-x: hidden;
@@ -411,6 +451,7 @@ a {
     color: #4C3D19;
     position: relative;
     font-family: 'Raleway';
+    font-weight: bold;
 }
 
 .homeMainContainerChild1 {
