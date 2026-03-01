@@ -982,9 +982,29 @@ a {
 
 
 .contacts {
-    text-align: left;
     width: 100%;
-    padding-left: 30%;
+    display: flex;
+    gap: 0;
+}
+
+.contacts p {
+    width: 100%;
+}
+
+.contacts .child {
+    width: 50%;
+}
+
+.contacts .child2 {
+    width: fit-content;
+    text-align: left;
+}
+
+.contacts .child2 p {
+    width: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .contactChild2 {
@@ -1201,6 +1221,7 @@ a {
 .submitContainer button {
     width: 120px;
     height: 120px;
+    min-width: 120px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
@@ -1263,6 +1284,21 @@ a {
     100% {
         top: -80%;
         left: 100%;
+    }
+}
+
+@media (max-width: 750px) {
+    .formularChild {
+        display: block;
+    }
+
+    .submitContainer hr {
+        display: none;
+    }
+
+    .submitContainer {
+        width: 100%;
+        margin-left: 0;
     }
 }
 
