@@ -7,7 +7,6 @@ const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
-const { json } = require("stream/consumers");
 const pool = require("./db");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
@@ -256,6 +255,14 @@ server.get("/api/editInformation", checkAdmin, (req, res) => {
 
 server.get("/editInformation.js", checkAdmin, (req, res) => {
     res.sendFile(path.join(__dirname, "private", "editInformation.js"));
+});
+
+server.get("/formsHTML", checkAdmin, (req, res) => {
+    res.sendFile(path.join(__dirname, "private", "forms.html"));
+});
+
+server.get("/formsJS", checkAdmin, (req, res) => {
+    res.sendFile(path.join(__dirname, "private", "forms.js"));
 });
 
 //Thumbnail upload area
@@ -507,14 +514,77 @@ server.post("/controll", (req, res) => {
     console.log(message);
 });
 
-(async () => {
-  try {
-    const result = await pool.query("SELECT NOW()");
-    console.log("DB verbunden:", result.rows[0]);
-  } catch (error) {
-    console.error("DB Fehler:", error);
-  }
-})();
+server.post("/api/contact", async (req, res) => {
+    const { name, email, subject, message } = req.body;
+    if(name && email && subject && message) {
+        const contactMessage = `
+        ---Neue Kontaktanfrage---
+        Name: ${name}
+        Email: ${email}
+        Subject: ${subject}
+        Message: ${message}
+        -------------------------`;
+        console.log(contactMessage);
+        
+        try {
+            await pool.query(
+            `INSERT INTO formular
+             (name, email, subject, message)
+             VALUES ($1, $2, $3, $4)`,
+            [name, email, subject, message]);
+        } catch (err) {
+            console.error("DB Error: ", err);
+            return res.json({ success: false, message: "Error saving message in database" });
+        }
+
+        res.json({ success: true, message: "Message received! I'll get back to you soon." });
+    }
+    else {
+        res.json({ success: false, message: "Please fill in all fields!" });
+    }
+});
+
+server.get("/api/getForms", checkAdmin, async (req, res) => {
+    try {
+        const result = await pool.query(
+        `SELECT id, name, email, subject, message 
+        FROM formular`
+        );
+
+        console.log(result.rows);
+        return res.json({ success: true, forms: result.rows });
+
+    } catch(error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: "DB error" });
+    }
+});
+
+server.post("/api/deleteForm", checkAdmin, async (req, res) => {
+    const { id } = req.body;
+
+    try {
+        const result = await pool.query(
+            `DELETE FROM formular
+            WHERE id = $1`,
+            [id]
+        )
+        res.json({ success: true, message: "Form deleted successfully!" });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Error deleting form" });
+    }
+})
+
+pool.query("SELECT NOW()")
+  .then(res => {
+    console.log("DB verbunden:", res.rows[0]);
+    server.listen(PORT, () => console.log(`Server läuft auf ${PORT}`));
+  })
+  .catch(err => {
+    console.error("DB Fehler:", err);
+    process.exit(1); // nur exit, wenn du wirklich willst, dass der Server nicht startet
+  });
 
 
 server.listen(PORT, () => console.log(`Server läuft auf ${PORT}`));

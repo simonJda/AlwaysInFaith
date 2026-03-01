@@ -15,7 +15,11 @@
     </style>
 
 </head>
-<body>
+<body class="contactBody">
+
+    <div id="goodAlert">
+    </div>
+    <div id="badAlert"></div>
 
     <div id="darker"></div>
 
@@ -64,7 +68,7 @@
             <img src="assets/image9.png" class="contactImage">
             <h2>I'd love to hear from you!</h2>
             <br>
-            <p>If you have any questions, suggestions, or if you just want to say hello, simply write to me using the following email address and feel free to follow me on Instagram.</p>
+            <p>If you have any questions, suggestions, or if you simply want to say hello, please write to me via the contact form, at the following email address, and feel free to follow me on Instagram.</p>
             <br>
             <div class="contacts">
                 <p>E-mail: <a href="mailto: annelynn01@outlook.com">annelynn01@outlook.com</a></p>
@@ -117,6 +121,43 @@
             </div>
         </div>
 
+        <div class="contactChild3">
+            <h1 style="font-family: 'Raleway';">Get in touch</h1>
+            <hr class="headingHR">
+
+            <form id="contactFormular">
+                <div class="formular">
+                <div class="formularChild">
+                    <label for="nameInput">Name*</label>
+                    <input type="text" name="name" id="nameInput" required>
+                </div>
+
+                <div class="formularChild">
+                    <label for="emailInput">E-Mail*</label>
+                    <input type="email" name="email" id="emailInput" required>
+                </div>
+
+                <div class="formularChild">
+                    <label for="subjectInput">Subject*</label>
+                    <input type="text" name="subject" id="subjectInput" required>
+                </div>
+
+                <div class="formularChild">
+                    <label for="messageInput">Message*</label>
+                    <textarea name="message" id="messageInput" required></textarea>
+                </div>
+
+                <div class="submitContainer">
+                    <hr>
+                    <button type="submit" id="submitButton"></button>
+                    <hr>
+                </div>
+            </form>
+
+            </div>
+
+        </div>
+
     </div>
 
     <footer>
@@ -125,5 +166,6 @@
     </footer>
 
     <script src="layout.js"></script>
+    <script src="contactMe.js"></script>
 </body>
 </html>

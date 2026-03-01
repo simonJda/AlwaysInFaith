@@ -944,6 +944,10 @@ a {
 
 /*Contact Section*/
 
+.contactBody .mainContainer {
+    margin-bottom: -10px;
+}
+
 .contactChild1 {
     width: 100%;
     background-color: #889063;
@@ -1110,4 +1114,172 @@ a {
     .supportContainer {
         padding: 0;
     }
+}
+
+.contactChild3 {
+    background-color: #929972;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-bottom: 30px;
+    padding-top: 30px;
+}
+
+.headingHR {
+    width: 100%;
+    height: 2px;
+    border: none;
+    border-top: 2px solid black;
+    margin-bottom: 40px;
+}
+
+.formular {
+    width: 100%;
+}
+
+.formularChild {
+    display: flex;
+    gap: 10%;
+    align-items: flex-start;
+    font-family: "Raleway";
+    margin-bottom: 50px;
+}
+
+.formularChild input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px dotted black;
+    outline: none;
+    width: 100%;
+    font-size: 100%;
+    font-family: "Cormorant Garamond";
+    line-height: 1.2;
+    transition: 0.3s all;
+    padding: 0px;
+}
+
+.formularChild input:focus  {
+    border-bottom: 3px dotted white;
+    padding: 10px;
+}
+
+.formularChild label {
+    width: 15%;
+}
+
+.formularChild textarea {
+    background-color: transparent;
+    border: 2px dotted black;
+    outline: none;
+    width: 100%;
+    font-size: 100%;
+    font-family: "Cormorant Garamond";
+    transition: 0.3s all;
+    padding: 3px;
+    height: 200px;
+}
+
+.formularChild textarea:focus {
+    border: 2px dotted white;
+}
+
+.submitContainer {
+    display: flex;
+    width: 78%;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+    margin-left: 22%;
+}
+
+.submitContainer hr {
+    border: none;
+    background-color: black;
+    height: 1px;
+    width: 30%;
+}
+
+.submitContainer button {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: 0.3s all;
+    box-shadow: 0 0 10px black;
+}
+
+.submitContainer button:hover {
+    box-shadow: 0 0 10px white;
+}
+
+.submitContainer button:hover::after {
+    animation: textIn 0.7s forwards;
+}
+
+.submitContainer button:hover::before {
+    animation: planeOut 0.5s forwards;
+}
+
+.submitContainer button::before {
+    content: "";
+    position: absolute;
+    background-image: url("assets/icon/send.png");
+    background-size: contain;
+    width: 50%;
+    height: 50%;
+    top: 25%;
+    left: 25%;
+}
+
+.submitContainer button::after {
+    content: "Send";
+    font-size: 23px;
+    position: absolute;
+    right: 150px;
+    top: 150px;
+    font-weight: bolder;
+}
+
+@keyframes textIn {
+    20% {
+        top: 35%;
+        right: 26%;
+    }
+
+    50% {
+        top: 45%;
+        right: 32%;
+    }
+    
+    100% {
+        top: 40%;
+        right: 29%;
+    }
+}
+
+@keyframes planeOut {
+    100% {
+        top: -80%;
+        left: 100%;
+    }
+}
+
+#goodAlert, #badAlert {
+    width: 300px;
+    position: fixed;
+    bottom: 10px;
+    right: -400px;
+    z-index: 100;
+    height: auto;
+    transition: 0.5s all;
+}
+
+#goodAlert {
+    border: 3px solid rgb(2, 172, 2);
+}
+
+#badAlert {
+    border: 3px solid red;
 }
