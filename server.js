@@ -517,15 +517,6 @@ server.post("/controll", (req, res) => {
 server.post("/api/contact", async (req, res) => {
     const { name, email, subject, message } = req.body;
     if(name && email && subject && message) {
-        const contactMessage = `
-        ---Neue Kontaktanfrage---
-        Name: ${name}
-        Email: ${email}
-        Subject: ${subject}
-        Message: ${message}
-        -------------------------`;
-        console.log(contactMessage);
-        
         try {
             await pool.query(
             `INSERT INTO formular
@@ -537,6 +528,8 @@ server.post("/api/contact", async (req, res) => {
             return res.json({ success: false, message: "Error saving message in database" });
         }
 
+        console.log("New message in database from: ", name);
+        console.log("E-Mail:", email);
         res.json({ success: true, message: "Message received! I'll get back to you soon." });
     }
     else {
@@ -551,7 +544,6 @@ server.get("/api/getForms", checkAdmin, async (req, res) => {
         FROM formular`
         );
 
-        console.log(result.rows);
         return res.json({ success: true, forms: result.rows });
 
     } catch(error) {
@@ -569,10 +561,11 @@ server.post("/api/deleteForm", checkAdmin, async (req, res) => {
             WHERE id = $1`,
             [id]
         )
-        res.json({ success: true, message: "Form deleted successfully!" });
+        console.log("Deleted form with id: ", id);
+        return res.json({ success: true, message: "Form deleted successfully!" });
     } catch(error) {
         console.error(error);
-        res.status(500).json({ success: false, message: "Error deleting form" });
+        return res.status(500).json({ success: false, message: "Error deleting form" });
     }
 })
 
