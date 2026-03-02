@@ -535,7 +535,7 @@ server.post("/api/contact", async (req, res) => {
     else {
         res.json({ success: false, message: "Please fill in all fields!" });
     }
-});
+}); 
 
 server.get("/api/getForms", checkAdmin, async (req, res) => {
     try {
